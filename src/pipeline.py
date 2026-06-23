@@ -40,10 +40,9 @@ class DocuSensePipeline:
 
         model_name = getattr(AppConfig, 'LLM_MODEL_NAME', "nvidia/nemotron-3-super-120b-a12b")
 
-        # Added direct fallback so the pipeline runs smoothly even if .env fails to load in PowerShell
-        api_key = getattr(AppConfig, 'NVIDIA_API_KEY', "")
+       api_key = getattr(AppConfig, 'NVIDIA_API_KEY', "")
         if not api_key:
-            api_key = "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"
+            api_key = ""
 
         self.variant_generator = LLMVariantGenerator(
             model_name=model_name,
@@ -60,8 +59,7 @@ class DocuSensePipeline:
             api_key=api_key
         )
 
-        # --- NEW CRAG COMPONENTS ---
-        self.relevance_scorer = RelevanceScorer(
+       self.relevance_scorer = RelevanceScorer(
             model_name=model_name,
             api_key=api_key
         )
@@ -83,7 +81,6 @@ class DocuSensePipeline:
         print(f"TARGET LIBRARY: {target_library.upper()}")
         print("=" * 70)
 
-        # Execution is now routed through the CRAG Manager instead of directly to Multi-Query
         retrieved_chunks, generated_queries, crag_triggered = self.crag_manager.execute_with_correction(
             question=question,
             library_name=target_library,
@@ -91,7 +88,7 @@ class DocuSensePipeline:
         )
 
         if crag_triggered:
-            print("\n✅ CRAG successfully intervened and provided corrected context!")
+            print("\n CRAG successfully intervened and provided corrected context!")
 
         print(f"\nSuccessfully retrieved and merged {len(retrieved_chunks)} unique chunks.")
 
@@ -129,7 +126,6 @@ if __name__ == "__main__":
             "q": "How do I create a dependency injection function that requires database access?"
         },
         {
-            # I made this query intentionally terrible and vague so we can force CRAG to intervene!
             "lib": "scikit-learn",
             "q": "I want to do the tree thingy but with the validator cross thing on my data. How?"
         }
