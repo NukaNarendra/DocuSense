@@ -196,7 +196,7 @@ def setup_test_environment() -> MultiQueryEngine:
     # Fallbacks added here to prevent AttributeError and inject your exact config
     model_name = getattr(AppConfig, 'LLM_MODEL_NAME', "nvidia/nemotron-3-super-120b-a12b")
     api_key = getattr(AppConfig, 'NVIDIA_API_KEY',
-                      "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")
+                      "")
 
     generator = LLMVariantGenerator(
         model_name=model_name,
