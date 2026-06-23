@@ -40,9 +40,9 @@ class DocuSensePipeline:
 
         model_name = getattr(AppConfig, 'LLM_MODEL_NAME', "nvidia/nemotron-3-super-120b-a12b")
 
-       api_key = getattr(AppConfig, 'NVIDIA_API_KEY', "")
+        api_key = getattr(AppConfig, 'NVIDIA_API_KEY', "")
         if not api_key:
-            api_key = ""
+            api_key = "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"
 
         self.variant_generator = LLMVariantGenerator(
             model_name=model_name,
@@ -59,7 +59,7 @@ class DocuSensePipeline:
             api_key=api_key
         )
 
-       self.relevance_scorer = RelevanceScorer(
+        self.relevance_scorer = RelevanceScorer(
             model_name=model_name,
             api_key=api_key
         )
@@ -88,7 +88,7 @@ class DocuSensePipeline:
         )
 
         if crag_triggered:
-            print("\n CRAG successfully intervened and provided corrected context!")
+            print("\n✅ CRAG successfully intervened and provided corrected context!")
 
         print(f"\nSuccessfully retrieved and merged {len(retrieved_chunks)} unique chunks.")
 
@@ -111,26 +111,3 @@ class DocuSensePipeline:
             "answer": final_answer,
             "execution_time": execution_time
         }
-
-
-if __name__ == "__main__":
-    try:
-        pipeline = DocuSensePipeline()
-    except Exception as e:
-        print(f"Failed to start pipeline: {str(e)}")
-        sys.exit(1)
-
-    questions = [
-        {
-            "lib": "fastapi",
-            "q": "How do I create a dependency injection function that requires database access?"
-        },
-        {
-            "lib": "scikit-learn",
-            "q": "I want to do the tree thingy but with the validator cross thing on my data. How?"
-        }
-    ]
-
-    for item in questions:
-        pipeline.run(question=item["q"], target_library=item["lib"])
-        print("\n\n")
