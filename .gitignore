@@ -9,9 +9,9 @@ env/
 
 # Data and Databases (ignore large files, keep structure)
 data/raw/*
-data/processed/*
-data/chroma_db/*
-data/bm25_indices/*
+#data/processed/*
+#data/chroma_db/*
+#data/bm25_indices/*
 
 # Keep directory structure with .gitkeep
 !data/raw/.gitkeep
