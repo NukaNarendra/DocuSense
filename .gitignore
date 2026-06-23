@@ -1,0 +1,30 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# API Keys and Secrets
+.env
+.env.example
+
+# Data and Databases (ignore large files, keep structure)
+data/raw/*
+data/processed/*
+data/chroma_db/*
+data/bm25_indices/*
+
+# Keep directory structure with .gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/chroma_db/.gitkeep
+!data/bm25_indices/.gitkeep
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# IDE files (PyCharm)
+.idea/

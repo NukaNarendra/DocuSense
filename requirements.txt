@@ -1,0 +1,11 @@
+langchain==0.1.16
+langchain-text-splitters==0.0.1
+requests==2.31.0
+beautifulsoup4==4.12.3
+urllib3==2.2.1
+chromadb==0.4.24
+rank-bm25==0.2.2
+sentence-transformers==2.6.1
+tqdm==4.66.2
+langchain-nvidia-ai-endpoints==0.1.6
+python-dotenv==1.0.1
