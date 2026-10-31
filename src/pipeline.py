@@ -38,7 +38,7 @@ class DocuSensePipeline:
             rrf_k=AppConfig.RRF_K
         )
 
-        model_name = getattr(AppConfig, 'LLM_MODEL_NAME', "nvidia/nemotron-3-super-120b-a12b")
+        model_name = getattr(AppConfig, 'LLM_MODEL_NAME', "nvidia/nemotron-3.5-super-vl-120b-a12b")
 
         api_key = getattr(AppConfig, 'NVIDIA_API_KEY', "")
         if not api_key:

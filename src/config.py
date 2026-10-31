@@ -1,5 +1,8 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class AppConfig:
@@ -16,5 +19,7 @@ class AppConfig:
     TOP_K_FINAL = 5
     RRF_K = 60
 
-    os.makedirs(CHROMA_DB_DIR, exist_ok=True)
-    os.makedirs(BM25_INDEX_DIR, exist_ok=True)
+    NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
+    # Upgraded from deprecated nemotron-3-super-120b-a12b to the fast 3.5 Lightning MoE model
+    # Alternatives: "nvidia/nemotron-3.5-super-vl-120b-a12b" or "nvidia/nemotron-3-ultra-550b-a55b"
+    LLM_MODEL_NAME = "nvidia/nemotron-3.5-super-vl-120b-a12b"
