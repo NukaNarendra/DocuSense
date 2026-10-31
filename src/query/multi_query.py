@@ -77,13 +77,16 @@ class LLMVariantGenerator:
         try:
             response = self.client.invoke(messages)
             full_content = response.content
-            print(full_content)
-            print("-" * 50)
 
-            if not full_content.strip():
+            if not full_content or not full_content.strip():
+                print("[WARNING] Empty LLM response. Using original query.")
                 return [original_query]
 
             variants = self._parse_response(full_content)
+
+            if not variants:
+                return [original_query]
+
             return variants
 
         except Exception as e:

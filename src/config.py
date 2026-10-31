@@ -2,7 +2,9 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# override=False ensures that if you set $env:NVIDIA_API_KEY in PowerShell,
+# an old .env file won't overwrite your terminal key!
+load_dotenv(override=False)
 
 
 class AppConfig:
@@ -19,7 +21,9 @@ class AppConfig:
     TOP_K_FINAL = 5
     RRF_K = 60
 
-    NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY")
-    # Upgraded from deprecated nemotron-3-super-120b-a12b to the fast 3.5 Lightning MoE model
-    # Alternatives: "nvidia/nemotron-3.5-super-vl-120b-a12b" or "nvidia/nemotron-3-ultra-550b-a55b"
+    # Read from terminal environment ($env:NVIDIA_API_KEY) or .env
+    _raw_key = os.environ.get("NVIDIA_API_KEY", "")
+    NVIDIA_API_KEY = _raw_key.strip().strip('"').strip("'") if _raw_key else None
+
+    # Fast MoE model (or change to "nvidia/nemotron-3.5-super-vl-120b-a12b" if preferred)
     LLM_MODEL_NAME = "nvidia/nemotron-3.5-super-vl-120b-a12b"

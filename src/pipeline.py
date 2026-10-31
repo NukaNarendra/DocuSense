@@ -38,11 +38,27 @@ class DocuSensePipeline:
             rrf_k=AppConfig.RRF_K
         )
 
-        model_name = getattr(AppConfig, 'LLM_MODEL_NAME', "nvidia/nemotron-3.5-super-vl-120b-a12b")
+        model_name = getattr(AppConfig, 'LLM_MODEL_NAME', "nvidia/nemotron-3.5-lightning-30b-a3b")
 
-        api_key = getattr(AppConfig, 'NVIDIA_API_KEY', "")
+        # 1. Check terminal environment variable first ($env:NVIDIA_API_KEY)
+        api_key = os.environ.get("NVIDIA_API_KEY") or getattr(AppConfig, 'NVIDIA_API_KEY', None)
+
+        # 2. Fallback to Streamlit secrets if running on Streamlit Cloud
         if not api_key:
-            api_key = "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"
+            try:
+                import streamlit as st
+                api_key = st.secrets.get("NVIDIA_API_KEY")
+            except Exception:
+                pass
+
+        if not api_key:
+            raise ValueError(
+                "NVIDIA_API_KEY is missing! Run: $env:NVIDIA_API_KEY=\"nvapi-...\" in your terminal before starting Streamlit."
+            )
+
+        api_key = api_key.strip().strip('"').strip("'")
+        os.environ["NVIDIA_API_KEY"] = api_key
+        print(f"Loaded NVIDIA API Key: {api_key[:10]}... (len={len(api_key)})")
 
         self.variant_generator = LLMVariantGenerator(
             model_name=model_name,

@@ -34,8 +34,12 @@ class CRAGManager:
         try:
             response = self.client.invoke([{"role": "user", "content": prompt}])
             rewritten = response.content.strip().replace('"', '')
-            print(f"\n[CRAG Rewrote Query To]: {rewritten}")
-            print("-" * 50)
+
+            if not rewritten:
+                print("[WARNING] Empty rewritten query. "
+                      "Falling back to original question.")
+                return failed_query
+
             return rewritten
         except Exception as e:
             print(f"\nCRAG Rewrite error: {str(e)}")
@@ -55,7 +59,20 @@ class CRAGManager:
         rewritten_query = self.rewrite_query(question)
 
         print(f"\n--- Second Retrieval Attempt (CRAG Corrected) ---")
-        new_chunks, new_queries = self.multi_query_engine.execute_retrieval(rewritten_query, library_name, top_k)
+        new_chunks, new_queries = (
+            self.multi_query_engine.execute_retrieval(
+                rewritten_query,
+                library_name,
+                top_k
+            )
+        )
 
+        second_verdict = self.scorer.score_context(
+            question,
+            new_chunks
+        )
+
+        if not second_verdict:
+            print("[CRAG] Second retrieval is also insufficient.")
         all_queries_tried = queries + new_queries
         return new_chunks, all_queries_tried, True
